@@ -3,3 +3,4 @@ Pillow>=10.0.0
 python-decouple>=3.8
 gunicorn>=21.2.0
 whitenoise>=6.5.0
+django-distill>=3.2.0
