@@ -1,0 +1,165 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Contact - {{ config.site_title }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="hero" style="min-height: 50vh; padding-top: 8rem;">
+    <div class="container text-center">
+        <h1 class="hero-title animate-fade-in-up">Get In Touch</h1>
+        <p class="hero-subtitle animate-fade-in-up" style="animation-delay: 0.2s;">
+            Let's discuss your next project
+        </p>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="section">
+    <div class="container">
+        <div class="contact-container">
+            <!-- Contact Form -->
+            <div data-aos="fade-right">
+                <h2 style="margin-bottom: 1.5rem;">Send Me a Message</h2>
+                <form method="post" class="contact-form glass-card">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="id_name" class="form-label">Your Name *</label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                        <span style="color: #ef4444; font-size: 0.85rem;">{{ form.name.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_email" class="form-label">Your Email *</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                        <span style="color: #ef4444; font-size: 0.85rem;">{{ form.email.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_subject" class="form-label">Subject *</label>
+                        {{ form.subject }}
+                        {% if form.subject.errors %}
+                        <span style="color: #ef4444; font-size: 0.85rem;">{{ form.subject.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_message" class="form-label">Message *</label>
+                        {{ form.message }}
+                        {% if form.message.errors %}
+                        <span style="color: #ef4444; font-size: 0.85rem;">{{ form.message.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Contact Info -->
+            <div data-aos="fade-left">
+                <h2 style="margin-bottom: 1.5rem;">Contact Information</h2>
+                <div class="contact-info">
+                    {% if config.email %}
+                    <div class="glass-card contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 0.5rem;">Email</h4>
+                            <a href="mailto:{{ config.email }}" style="color: var(--text-secondary);">
+                                {{ config.email }}
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if config.phone %}
+                    <div class="glass-card contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 0.5rem;">Phone</h4>
+                            <a href="tel:{{ config.phone }}" style="color: var(--text-secondary);">
+                                {{ config.phone }}
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if config.location %}
+                    <div class="glass-card contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 0.5rem;">Location</h4>
+                            <p style="color: var(--text-secondary); margin: 0;">
+                                {{ config.location }}
+                            </p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Social Media -->
+                    <div class="glass-card">
+                        <h4 style="margin-bottom: 1rem;">Follow Me</h4>
+                        <div class="social-links">
+                            {% if config.github_url %}
+                            <a href="{{ config.github_url }}" target="_blank" rel="noopener" class="social-link" aria-label="GitHub">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            {% endif %}
+                            {% if config.linkedin_url %}
+                            <a href="{{ config.linkedin_url }}" target="_blank" rel="noopener" class="social-link" aria-label="LinkedIn">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                            {% endif %}
+                            {% if config.twitter_url %}
+                            <a href="{{ config.twitter_url }}" target="_blank" rel="noopener" class="social-link" aria-label="Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Map Section (Optional) -->
+<section class="section" style="background: var(--bg-secondary);">
+    <div class="container text-center">
+        <div class="glass-card" style="padding: 4rem; text-align: center;" data-aos="fade-up">
+            <i class="fas fa-map-marked-alt" style="font-size: 4rem; color: var(--primary); margin-bottom: 1rem;"></i>
+            <h3 style="margin-bottom: 1rem;">Available for Remote Work</h3>
+            <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+                I'm open to remote opportunities worldwide. Let's connect and discuss how we can work together!
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-input.error,
+    .form-textarea.error {
+        border-color: #ef4444;
+    }
+    
+    @media (max-width: 767px) {
+        .contact-container {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
