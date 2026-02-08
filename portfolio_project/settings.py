@@ -18,17 +18,23 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+# Security & environment configuration
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-v3m6taoyxdffb-9hf0(rq7cmj_(@6coo!)o8-&%6dn%8hj-+ew')
+SECRET_KEY = config(
+    "SECRET_KEY",
+    default="django-insecure-change-this-in-production"
+)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = config(
+    "DEBUG",
+    default=False,
+    cast=bool
+)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
-
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS",
+    default="*"
+).split(",")
 
 # Application definition
 
@@ -140,11 +146,13 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Django Distill settings for static site generation
-DISTILL_DIR = BASE_DIR / 'docs'
-DISTILL_PUBLISH = {
-    'local': {
-        'ENGINE': 'django_distill.backends.amazon_s3',
-        'PUBLIC_URL': '/',
-        'DISTILL_DIR': DISTILL_DIR,
-    },
-}
+# Django Distill settings for static site generation
+# DISTILL_DIR = BASE_DIR / 'docs'
+# DISTILL_PUBLISH = {
+#     'local': {
+#         'ENGINE': 'django_distill.backends.amazon_s3',
+#         'PUBLIC_URL': '/',
+#         'DISTILL_DIR': DISTILL_DIR,
+#     },
+# }
+
