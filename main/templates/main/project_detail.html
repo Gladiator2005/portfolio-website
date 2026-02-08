@@ -1,0 +1,160 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}{{ project.title }} - {{ config.site_title }}{% endblock %}
+
+{% block content %}
+<!-- Project Hero -->
+<section class="hero" style="min-height: 60vh; padding-top: 8rem;">
+    <div class="container">
+        <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+            {% if project.category %}
+            <p class="animate-fade-in-up" style="color: var(--accent); font-weight: 600; margin-bottom: 1rem;">
+                <i class="fas fa-tag"></i> {{ project.category.name }}
+            </p>
+            {% endif %}
+            
+            <h1 class="hero-title animate-fade-in-up" style="animation-delay: 0.1s;">
+                {{ project.title }}
+            </h1>
+            
+            <p class="hero-subtitle animate-fade-in-up" style="animation-delay: 0.2s;">
+                {{ project.short_description }}
+            </p>
+            
+            <div class="hero-buttons animate-fade-in-up" style="animation-delay: 0.3s;">
+                {% if project.project_url %}
+                <a href="{{ project.project_url }}" target="_blank" rel="noopener" class="btn btn-primary">
+                    <i class="fas fa-external-link-alt"></i> View Live Project
+                </a>
+                {% endif %}
+                {% if project.github_url %}
+                <a href="{{ project.github_url }}" target="_blank" rel="noopener" class="btn btn-outline">
+                    <i class="fab fa-github"></i> View Source Code
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Project Details -->
+<section class="section">
+    <div class="container">
+        <!-- Project Image -->
+        {% if project.image %}
+        <div class="glass-card" style="padding: 0; overflow: hidden; margin-bottom: 3rem;" data-aos="fade-up">
+            <img src="{{ project.image.url }}" alt="{{ project.title }}" style="width: 100%; height: auto;">
+        </div>
+        {% endif %}
+        
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 3rem;">
+            <!-- Description -->
+            <div data-aos="fade-up">
+                <h2 style="margin-bottom: 1.5rem;">About This Project</h2>
+                <div class="glass-card">
+                    <p style="line-height: 1.8; color: var(--text-secondary); white-space: pre-wrap;">{{ project.description }}</p>
+                </div>
+            </div>
+            
+            <!-- Project Info Sidebar -->
+            <div>
+                <!-- Technologies Used -->
+                {% if project.technologies.all %}
+                <div class="glass-card" data-aos="fade-up" data-aos-delay="100" style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem;">
+                        <i class="fas fa-code"></i> Technologies
+                    </h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                        {% for tech in project.technologies.all %}
+                        <span class="tech-tag" style="background-color: {{ tech.color }};">
+                            {% if tech.icon_class %}
+                            <i class="{{ tech.icon_class }}"></i>
+                            {% endif %}
+                            {{ tech.name }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Project Links -->
+                <div class="glass-card" data-aos="fade-up" data-aos-delay="200">
+                    <h3 style="margin-bottom: 1rem;">
+                        <i class="fas fa-link"></i> Links
+                    </h3>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        {% if project.project_url %}
+                        <a href="{{ project.project_url }}" target="_blank" rel="noopener" class="btn btn-outline" style="width: 100%;">
+                            <i class="fas fa-external-link-alt"></i> Live Demo
+                        </a>
+                        {% endif %}
+                        {% if project.github_url %}
+                        <a href="{{ project.github_url }}" target="_blank" rel="noopener" class="btn btn-outline" style="width: 100%;">
+                            <i class="fab fa-github"></i> Source Code
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'projects' %}" class="btn btn-outline" style="width: 100%;">
+                            <i class="fas fa-arrow-left"></i> Back to Projects
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Projects -->
+{% if related_projects %}
+<section class="section" style="background: var(--bg-secondary);">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <h2 class="section-title">Related Projects</h2>
+            <p class="section-subtitle">You might also like these</p>
+        </div>
+        
+        <div class="projects-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+            {% for related in related_projects %}
+            <div class="project-card glass-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|multiply:100 }}">
+                {% if related.image %}
+                <img src="{{ related.image.url }}" alt="{{ related.title }}" class="project-card-image">
+                {% else %}
+                <div class="project-card-image" style="background: var(--gradient-primary);"></div>
+                {% endif %}
+                
+                <div class="project-card-overlay">
+                    <h3 class="project-card-title">{{ related.title }}</h3>
+                    <p class="project-card-description">{{ related.short_description }}</p>
+                    
+                    {% if related.technologies.all %}
+                    <div class="tech-tags">
+                        {% for tech in related.technologies.all|slice:":3" %}
+                        <span class="tech-tag">{{ tech.name }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="project-links">
+                        <a href="{% url 'project_detail' related.slug %}" class="project-link">
+                            <i class="fas fa-info-circle"></i> Details
+                        </a>
+                        {% if related.project_url %}
+                        <a href="{{ related.project_url }}" target="_blank" rel="noopener" class="project-link">
+                            <i class="fas fa-external-link-alt"></i> Live
+                        </a>
+                        {% endif %}
+                        {% if related.github_url %}
+                        <a href="{{ related.github_url }}" target="_blank" rel="noopener" class="project-link">
+                            <i class="fab fa-github"></i> Code
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,254 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}{{ config.name|default:"Portfolio" }} - {{ config.title|default:"Full Stack Developer" }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero" id="home">
+    <canvas id="particles-canvas"></canvas>
+    
+    <div class="container hero-content">
+        {% if config.profile_image %}
+        <div class="hero-image animate-scale-in">
+            <img src="{{ config.profile_image.url }}" alt="{{ config.name }}">
+        </div>
+        {% endif %}
+        
+        <h1 class="hero-title animate-fade-in-up">
+            {{ config.name|default:"Your Name" }}
+        </h1>
+        
+        <p class="hero-subtitle animate-fade-in-up" style="animation-delay: 0.2s;">
+            {{ config.title|default:"Full Stack Developer" }}
+        </p>
+        
+        <div class="hero-buttons animate-fade-in-up" style="animation-delay: 0.4s;">
+            <a href="{% url 'projects' %}" class="btn btn-primary">
+                <i class="fas fa-folder-open"></i> View Projects
+            </a>
+            <a href="{% url 'contact' %}" class="btn btn-outline">
+                <i class="fas fa-envelope"></i> Contact Me
+            </a>
+        </div>
+    </div>
+    
+    <div class="scroll-indicator">
+        <i class="fas fa-chevron-down"></i>
+    </div>
+</section>
+
+<!-- About Preview Section -->
+<section class="section" id="about-preview">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <h2 class="section-title">About Me</h2>
+            <p class="section-subtitle">Get to know me better</p>
+        </div>
+        
+        <div class="glass-card" data-aos="fade-up" data-aos-delay="100" style="max-width: 800px; margin: 0 auto; text-align: center;">
+            <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text-secondary);">
+                {{ config.bio|default:"Welcome to my portfolio! I'm passionate about creating beautiful and functional web applications." }}
+            </p>
+            <a href="{% url 'about' %}" class="btn btn-primary" style="margin-top: 2rem;">
+                Learn More <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Projects Section -->
+<section class="section" id="projects">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <h2 class="section-title">Featured Projects</h2>
+            <p class="section-subtitle">Check out my latest work</p>
+        </div>
+        
+        <div class="projects-grid">
+            {% for project in featured_projects %}
+            <div class="project-card glass-card stagger-item reveal" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1|multiply:100 }}">
+                {% if project.image %}
+                <img src="{{ project.image.url }}" alt="{{ project.title }}" class="project-card-image">
+                {% else %}
+                <div class="project-card-image" style="background: var(--gradient-primary);"></div>
+                {% endif %}
+                
+                <div class="project-card-overlay">
+                    <h3 class="project-card-title">{{ project.title }}</h3>
+                    <p class="project-card-description">{{ project.short_description }}</p>
+                    
+                    {% if project.technologies.all %}
+                    <div class="tech-tags">
+                        {% for tech in project.technologies.all|slice:":3" %}
+                        <span class="tech-tag">{{ tech.name }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="project-links">
+                        <a href="{% url 'project_detail' project.slug %}" class="project-link">
+                            <i class="fas fa-info-circle"></i> Details
+                        </a>
+                        {% if project.project_url %}
+                        <a href="{{ project.project_url }}" target="_blank" rel="noopener" class="project-link">
+                            <i class="fas fa-external-link-alt"></i> Live
+                        </a>
+                        {% endif %}
+                        {% if project.github_url %}
+                        <a href="{{ project.github_url }}" target="_blank" rel="noopener" class="project-link">
+                            <i class="fab fa-github"></i> Code
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p style="text-align: center; grid-column: 1 / -1; color: var(--text-secondary);">
+                No featured projects yet. Check back soon!
+            </p>
+            {% endfor %}
+        </div>
+        
+        {% if featured_projects %}
+        <div style="text-align: center; margin-top: 3rem;" data-aos="fade-up">
+            <a href="{% url 'projects' %}" class="btn btn-outline">
+                View All Projects <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Skills Section -->
+<section class="section" id="skills" style="background: var(--bg-secondary);">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <h2 class="section-title">Skills & Expertise</h2>
+            <p class="section-subtitle">Technologies I work with</p>
+        </div>
+        
+        {% regroup skills by category as skills_by_category %}
+        {% for category in skills_by_category %}
+        <div style="margin-bottom: 3rem;">
+            <h3 class="text-center" style="margin-bottom: 2rem; color: var(--primary);" data-aos="fade-up">
+                {{ category.grouper|title }}
+            </h3>
+            
+            <div class="skills-grid">
+                {% for skill in category.list %}
+                <div class="glass-card skill-item" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|multiply:50 }}">
+                    {% if skill.icon_class %}
+                    <div class="skill-icon">
+                        <i class="{{ skill.icon_class }}" style="color: var(--primary);"></i>
+                    </div>
+                    {% endif %}
+                    <h4 class="skill-name">{{ skill.name }}</h4>
+                    <div class="skill-bar-container">
+                        <div class="skill-bar" data-proficiency="{{ skill.proficiency }}" style="background: var(--gradient-primary);"></div>
+                    </div>
+                    <p style="margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">{{ skill.proficiency }}%</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center" style="color: var(--text-secondary);">
+            Skills will be added soon.
+        </p>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Stats Counter Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-item" data-aos="fade-up">
+                <div class="stat-icon">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <div class="stat-number" data-target="{{ config.projects_completed }}">0</div>
+                <div class="stat-label">Projects Completed</div>
+            </div>
+            
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="stat-number" data-target="{{ config.years_experience }}">0</div>
+                <div class="stat-label">Years Experience</div>
+            </div>
+            
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-number" data-target="{{ config.happy_clients }}">0</div>
+                <div class="stat-label">Happy Clients</div>
+            </div>
+            
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
+                <div class="stat-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <div class="stat-number" data-target="{{ config.technologies_used }}">0</div>
+                <div class="stat-label">Technologies Used</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+{% if testimonials %}
+<section class="section" id="testimonials">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <h2 class="section-title">Testimonials</h2>
+            <p class="section-subtitle">What people say about me</p>
+        </div>
+        
+        <div class="testimonials-slider" data-aos="fade-up" data-aos-delay="100">
+            {% for testimonial in testimonials %}
+            <div class="testimonial-card glass-card">
+                {% if testimonial.image %}
+                <div class="testimonial-image">
+                    <img src="{{ testimonial.image.url }}" alt="{{ testimonial.name }}">
+                </div>
+                {% endif %}
+                
+                <div class="testimonial-rating">
+                    {% for i in testimonial.rating|get_range %}
+                    <i class="fas fa-star"></i>
+                    {% endfor %}
+                </div>
+                
+                <p class="testimonial-content">"{{ testimonial.content }}"</p>
+                
+                <h4 class="testimonial-author">{{ testimonial.name }}</h4>
+                <p class="testimonial-position">
+                    {{ testimonial.position }}{% if testimonial.company %} @ {{ testimonial.company }}{% endif %}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Contact CTA Section -->
+<section class="section" style="background: var(--gradient-bg);">
+    <div class="container text-center">
+        <div data-aos="fade-up">
+            <h2 class="section-title">Let's Work Together</h2>
+            <p class="section-subtitle" style="max-width: 600px; margin: 0 auto 2rem;">
+                Have a project in mind? I'd love to hear about it. Let's discuss how we can bring your ideas to life.
+            </p>
+            <a href="{% url 'contact' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-paper-plane"></i> Get In Touch
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

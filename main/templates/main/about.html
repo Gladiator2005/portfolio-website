@@ -1,0 +1,206 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}About - {{ config.site_title }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="hero" style="min-height: 50vh; padding-top: 8rem;">
+    <div class="container text-center">
+        <h1 class="hero-title animate-fade-in-up">About Me</h1>
+        <p class="hero-subtitle animate-fade-in-up" style="animation-delay: 0.2s;">
+            Get to know me, my journey, and my skills
+        </p>
+    </div>
+</section>
+
+<!-- Profile Section -->
+<section class="section">
+    <div class="container">
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 3rem; align-items: center;">
+            {% if config.profile_image %}
+            <div data-aos="fade-right">
+                <div class="glass-card" style="padding: 0; overflow: hidden;">
+                    <img src="{{ config.profile_image.url }}" alt="{{ config.name }}" style="width: 100%; height: auto;">
+                </div>
+            </div>
+            {% endif %}
+            
+            <div data-aos="fade-left">
+                <h2 style="margin-bottom: 1rem;">{{ config.name }}</h2>
+                <p style="font-size: 1.2rem; color: var(--primary); margin-bottom: 1.5rem;">
+                    {{ config.title }}
+                </p>
+                <div class="glass-card">
+                    <p style="line-height: 1.8; color: var(--text-secondary); white-space: pre-wrap;">{{ config.bio }}</p>
+                </div>
+                
+                <div style="margin-top: 2rem;">
+                    {% if config.email %}
+                    <p style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-envelope" style="color: var(--primary); width: 30px;"></i>
+                        <a href="mailto:{{ config.email }}" style="color: var(--text-secondary);">{{ config.email }}</a>
+                    </p>
+                    {% endif %}
+                    {% if config.phone %}
+                    <p style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-phone" style="color: var(--primary); width: 30px;"></i>
+                        <a href="tel:{{ config.phone }}" style="color: var(--text-secondary);">{{ config.phone }}</a>
+                    </p>
+                    {% endif %}
+                    {% if config.location %}
+                    <p style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-map-marker-alt" style="color: var(--primary); width: 30px;"></i>
+                        <span style="color: var(--text-secondary);">{{ config.location }}</span>
+                    </p>
+                    {% endif %}
+                </div>
+                
+                {% if config.resume_file %}
+                <div style="margin-top: 2rem;">
+                    <a href="{{ config.resume_file.url }}" target="_blank" class="btn btn-primary">
+                        <i class="fas fa-download"></i> Download Resume
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Experience Timeline -->
+{% if experiences %}
+<section class="section" style="background: var(--bg-secondary);">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <h2 class="section-title">Work Experience</h2>
+            <p class="section-subtitle">My professional journey</p>
+        </div>
+        
+        <div class="timeline">
+            {% for experience in experiences %}
+            <div class="timeline-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|multiply:100 }}">
+                <div class="timeline-content glass-card">
+                    <span class="timeline-date">
+                        {{ experience.start_date|date:"M Y" }} - 
+                        {% if experience.current %}
+                            Present
+                        {% else %}
+                            {{ experience.end_date|date:"M Y" }}
+                        {% endif %}
+                    </span>
+                    <h3 class="timeline-title">{{ experience.position }}</h3>
+                    <p class="timeline-subtitle">
+                        <i class="fas fa-building"></i> {{ experience.company }}
+                        {% if experience.location %}
+                        <span style="margin-left: 1rem;">
+                            <i class="fas fa-map-marker-alt"></i> {{ experience.location }}
+                        </span>
+                        {% endif %}
+                    </p>
+                    <p class="timeline-description">{{ experience.description }}</p>
+                </div>
+                <div class="timeline-empty"></div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Education -->
+{% if education %}
+<section class="section">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <h2 class="section-title">Education</h2>
+            <p class="section-subtitle">Academic background</p>
+        </div>
+        
+        <div class="timeline">
+            {% for edu in education %}
+            <div class="timeline-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|multiply:100 }}">
+                <div class="timeline-content glass-card">
+                    <span class="timeline-date">
+                        {{ edu.start_date|date:"Y" }} - 
+                        {% if edu.end_date %}
+                            {{ edu.end_date|date:"Y" }}
+                        {% else %}
+                            Present
+                        {% endif %}
+                    </span>
+                    <h3 class="timeline-title">{{ edu.degree }}</h3>
+                    <p class="timeline-subtitle">
+                        <i class="fas fa-university"></i> {{ edu.institution }}
+                        {% if edu.field_of_study %}
+                        <br>{{ edu.field_of_study }}
+                        {% endif %}
+                    </p>
+                    {% if edu.description %}
+                    <p class="timeline-description">{{ edu.description }}</p>
+                    {% endif %}
+                </div>
+                <div class="timeline-empty"></div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Skills Section -->
+{% if skills %}
+<section class="section" style="background: var(--gradient-bg);">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <h2 class="section-title">Technical Skills</h2>
+            <p class="section-subtitle">My areas of expertise</p>
+        </div>
+        
+        {% regroup skills by category as skills_by_category %}
+        {% for category in skills_by_category %}
+        <div style="margin-bottom: 3rem;">
+            <h3 class="text-center" style="margin-bottom: 2rem; color: var(--primary);" data-aos="fade-up">
+                {{ category.grouper|title }}
+            </h3>
+            
+            <div class="skills-grid">
+                {% for skill in category.list %}
+                <div class="glass-card skill-item" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|multiply:50 }}">
+                    {% if skill.icon_class %}
+                    <div class="skill-icon">
+                        <i class="{{ skill.icon_class }}"></i>
+                    </div>
+                    {% endif %}
+                    <h4 class="skill-name">{{ skill.name }}</h4>
+                    <div class="skill-bar-container">
+                        <div class="skill-bar" data-proficiency="{{ skill.proficiency }}"></div>
+                    </div>
+                    <p style="margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">
+                        {{ skill.proficiency }}%
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+<section class="section">
+    <div class="container text-center">
+        <div data-aos="fade-up">
+            <h2 class="section-title">Interested in Working Together?</h2>
+            <p class="section-subtitle" style="max-width: 600px; margin: 0 auto 2rem;">
+                I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
+            </p>
+            <a href="{% url 'contact' %}" class="btn btn-primary">
+                <i class="fas fa-envelope"></i> Get In Touch
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
