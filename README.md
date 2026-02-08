@@ -43,6 +43,29 @@ A complete, modern, interactive portfolio website built with Django, inspired by
 
 *Screenshots will be added here once the site is deployed*
 
+## 🌿 Branch Information
+
+This repository uses feature branches for development:
+
+- **`main`** - Production-ready code (stable branch)
+- **`copilot/create-interactive-portfolio-website`** - Feature branch with complete portfolio implementation
+
+### 📥 Merging the Feature Branch
+
+If you need to merge the feature branch into main, see **[MERGE_GUIDE.md](MERGE_GUIDE.md)** for detailed instructions.
+
+**Quick merge using the script:**
+```bash
+chmod +x merge_to_main.sh
+./merge_to_main.sh
+```
+
+**Or via GitHub Pull Request:**
+1. Go to your repository on GitHub
+2. Click "Pull requests" → "New pull request"
+3. Set base: `main`, compare: `copilot/create-interactive-portfolio-website`
+4. Click "Create pull request" → "Merge pull request"
+
 ## 🚀 Quick Start
 
 ### Prerequisites
